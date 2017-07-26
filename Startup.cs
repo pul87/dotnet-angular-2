@@ -11,6 +11,7 @@ using Microsoft.Extensions.Logging;
 
 namespace WebApplicationBasic
 {
+    // Classe di startup lanciata dal main di dotnet che è Program.cs
     public class Startup
     {
         public Startup(IHostingEnvironment env)
@@ -26,6 +27,7 @@ namespace WebApplicationBasic
         public IConfigurationRoot Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
+        // Configura la dependency injection
         public void ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
@@ -35,9 +37,13 @@ namespace WebApplicationBasic
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
+            // configurazione del logger, in questo caso viene rediretto verso la console
+            // questa cosa va bene in caso di ambiente di sviluppo, in produzione bisognerà
+            // modificare questa configurazione per salvare i log su database, file, remoto o altro
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
+            // Configurazione della Request Pipeline, una sequenza di middleware
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -50,8 +56,11 @@ namespace WebApplicationBasic
                 app.UseExceptionHandler("/Home/Error");
             }
 
+            // Serve per servire file statici
             app.UseStaticFiles();
 
+            // Anche MVC è un middleware, quando arriva una richiesta
+            // in base alla rotta vengono richiamati i controller.
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
