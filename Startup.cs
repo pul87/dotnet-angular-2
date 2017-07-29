@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using vega.Persistence;
 using Microsoft.EntityFrameworkCore;
+using AutoMapper;
 
 namespace WebApplicationBasic
 {
@@ -32,6 +33,8 @@ namespace WebApplicationBasic
         // Configura la dependency injection
         public void ConfigureServices(IServiceCollection services)
         {
+
+            services.AddAutoMapper();
             // per accedere alle configurazioni potevo anche usare Configuration.GetConnectionString("Default")
             services.AddDbContext<VegaDbContext>( options => options.UseSqlServer(Configuration["ConnectionStrings:Default"]));
             // Add framework services.
