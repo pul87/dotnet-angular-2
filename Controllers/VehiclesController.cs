@@ -61,7 +61,7 @@ namespace vega.Controllers
 
             if(vehicle == null)
                 return NotFound();
-                
+
             mapper.Map<VehicleResource, Vehicle>(vehicleResource, vehicle);
             vehicle.LastUpdate = DateTime.Now;
             await context.SaveChangesAsync();
@@ -79,6 +79,17 @@ namespace vega.Controllers
             context.Vehicles.Remove(vehicle);
             await context.SaveChangesAsync();
             return Ok(id);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetVehicle(int id)
+        {
+            var vehicle = await context.Vehicles.Include( v => v.Features).SingleOrDefaultAsync(v => v.Id == id);
+
+            if(vehicle == null)
+                return NotFound();
+
+            return Ok(mapper.Map<Vehicle, VehicleResource>(vehicle));
         }
     }
 }
