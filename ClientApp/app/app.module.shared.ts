@@ -1,5 +1,5 @@
 import { FormsModule } from '@angular/forms';
-import { VehicleService } from './services/make.service';
+import { VehicleService } from './services/vehicle.service';
 import { VehicleFormComponent } from './components/vehicle-form/vehicle-form.component';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';

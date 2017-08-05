@@ -11,8 +11,9 @@ namespace vega.Mapping
         public MappingProfile()
         {
             // Domain API to Resource
-            CreateMap<Make, KeyValuePairResource>();
+            CreateMap<Make, MakeResource>();
             CreateMap<Model, KeyValuePairResource>();
+            CreateMap<Make, KeyValuePairResource>();
             CreateMap<Feature, KeyValuePairResource>();
             CreateMap<Vehicle, SaveVehicleResource>()
             .ForMember( vr => vr.Contact, opt => opt.MapFrom( v => new ContactResource { Name = v.ContactName, Email = v.ContactEmail, Phone = v.ContactPhone} ))
