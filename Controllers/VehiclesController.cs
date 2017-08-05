@@ -55,6 +55,8 @@ namespace vega.Controllers
             vehicle.LastUpdate = DateTime.Now;
             await uow.CompleteAsync();
 
+            vehicle = await repository.GetVehicle(id);
+
             var result = mapper.Map<Vehicle, SaveVehicleResource>(vehicle);
             return Ok(result);
         }
