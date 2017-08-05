@@ -1,7 +1,8 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using vega.Models;
+using vega.Core.Models;
+using vega.Core;
 
 namespace vega.Persistence
 {
