@@ -14,67 +14,72 @@ namespace vega.Controllers
     {
         private readonly IMapper mapper;
         private readonly VegaDbContext context;
-        public VehiclesController(IMapper mapper, VegaDbContext context)
+        private readonly IVehicleRepository vehicleRepository;
+        public VehiclesController(IMapper mapper, VegaDbContext context, IVehicleRepository vehicleRepository)
         {
+            this.vehicleRepository = vehicleRepository;
             this.context = context;
             this.mapper = mapper;
         }
         // [FromBody] serve per dire dove andare a prendere i valori per creare l'oggetto
         [HttpPost]
-        public async Task<IActionResult> CreateVehicle([FromBody] VehicleResource vehicleResource)
+        public async Task<IActionResult> CreateVehicle([FromBody] SaveVehicleResource vehicleResource)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             var model = await context.Models.FindAsync(vehicleResource.ModelId);
 
-            if (model == null) 
+            if (model == null)
             {
                 ModelState.AddModelError("ModelId", "Invalid modelId.");
                 return BadRequest(ModelState);
             }
 
-            var vehicle = mapper.Map<VehicleResource, Vehicle>(vehicleResource);
+            var vehicle = mapper.Map<SaveVehicleResource, Vehicle>(vehicleResource);
             vehicle.LastUpdate = DateTime.Now;
+
             context.Vehicles.Add(vehicle);
             await context.SaveChangesAsync();
+
+            vehicle = await vehicleRepository.GetVehicle(vehicle.Id);
 
             var result = mapper.Map<Vehicle, VehicleResource>(vehicle);
             return Ok(result);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateVehicle(int id, [FromBody] VehicleResource vehicleResource)
+        public async Task<IActionResult> UpdateVehicle(int id, [FromBody] SaveVehicleResource vehicleResource)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             var model = await context.Models.FindAsync(vehicleResource.ModelId);
 
-            if (model == null) 
+            if (model == null)
             {
                 ModelState.AddModelError("ModelId", "Invalid modelId.");
                 return BadRequest(ModelState);
             }
 
-            var vehicle = await context.Vehicles.Include(v => v.Features).SingleOrDefaultAsync( v => v.Id == id);
+            var vehicle = await vehicleRepository.GetVehicle(id);
 
-            if(vehicle == null)
+            if (vehicle == null)
                 return NotFound();
 
-            mapper.Map<VehicleResource, Vehicle>(vehicleResource, vehicle);
+            mapper.Map<SaveVehicleResource, Vehicle>(vehicleResource, vehicle);
             vehicle.LastUpdate = DateTime.Now;
             await context.SaveChangesAsync();
 
-            var result = mapper.Map<Vehicle, VehicleResource>(vehicle);
+            var result = mapper.Map<Vehicle, SaveVehicleResource>(vehicle);
             return Ok(result);
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteVehicle(int id) 
+        public async Task<IActionResult> DeleteVehicle(int id)
         {
             var vehicle = await context.Vehicles.FindAsync(id);
-            if(vehicle == null)
+            if (vehicle == null)
                 return NotFound();
             context.Vehicles.Remove(vehicle);
             await context.SaveChangesAsync();
@@ -84,9 +89,9 @@ namespace vega.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetVehicle(int id)
         {
-            var vehicle = await context.Vehicles.Include( v => v.Features).SingleOrDefaultAsync(v => v.Id == id);
+            var vehicle = await vehicleRepository.GetVehicle(id);
 
-            if(vehicle == null)
+            if (vehicle == null)
                 return NotFound();
 
             return Ok(mapper.Map<Vehicle, VehicleResource>(vehicle));

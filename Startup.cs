@@ -34,6 +34,14 @@ namespace WebApplicationBasic
         public void ConfigureServices(IServiceCollection services)
         {
 
+            // Dependency injection per VehicleRepository
+            // 3 tipi di DI:
+            // Transient ( istanza nuova ad ogni uso )
+            // Singleton ( istanza unica per l'applicazione )
+            // Scoped ( instanza nuova per ogni request )
+            // di seguito lego l'interfaccia all'implementazione
+            services.AddScoped<IVehicleRepository, VehicleRepository>();
+
             services.AddAutoMapper();
             // per accedere alle configurazioni potevo anche usare Configuration.GetConnectionString("Default")
             services.AddDbContext<VegaDbContext>( options => options.UseSqlServer(Configuration["ConnectionStrings:Default"]));
