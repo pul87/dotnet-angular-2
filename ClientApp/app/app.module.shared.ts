@@ -1,3 +1,4 @@
+import * as Raven from 'raven-js';
 import { AppErrorHandler } from './app.error-handler';
 import { ErrorHandler } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -11,6 +12,10 @@ import { NavMenuComponent } from './components/navmenu/navmenu.component';
 import { HomeComponent } from './components/home/home.component';
 import { FetchDataComponent } from './components/fetchdata/fetchdata.component';
 import { CounterComponent } from './components/counter/counter.component';
+
+Raven
+  .config('https://b7a31838e56b497fb10075045f0a3b3e@sentry.io/200090')
+  .install();
 
 export const sharedConfig: NgModule = {
     bootstrap: [ AppComponent ],
