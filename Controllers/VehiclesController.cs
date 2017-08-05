@@ -13,12 +13,12 @@ namespace vega.Controllers
     public class VehiclesController : Controller
     {
         private readonly IMapper mapper;
-        private readonly VegaDbContext context;
-        private readonly IVehicleRepository vehicleRepository;
-        public VehiclesController(IMapper mapper, VegaDbContext context, IVehicleRepository vehicleRepository)
+        private readonly IVehicleRepository repository;
+        private readonly IUnitOfWork uow;
+        public VehiclesController(IMapper mapper, IVehicleRepository repository, IUnitOfWork uow)
         {
-            this.vehicleRepository = vehicleRepository;
-            this.context = context;
+            this.uow = uow;
+            this.repository = repository;
             this.mapper = mapper;
         }
         // [FromBody] serve per dire dove andare a prendere i valori per creare l'oggetto
@@ -28,21 +28,13 @@ namespace vega.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var model = await context.Models.FindAsync(vehicleResource.ModelId);
-
-            if (model == null)
-            {
-                ModelState.AddModelError("ModelId", "Invalid modelId.");
-                return BadRequest(ModelState);
-            }
-
             var vehicle = mapper.Map<SaveVehicleResource, Vehicle>(vehicleResource);
             vehicle.LastUpdate = DateTime.Now;
 
-            context.Vehicles.Add(vehicle);
-            await context.SaveChangesAsync();
+            repository.Add(vehicle);
+            await uow.CompleteAsync();
 
-            vehicle = await vehicleRepository.GetVehicle(vehicle.Id);
+            vehicle = await repository.GetVehicle(vehicle.Id);
 
             var result = mapper.Map<Vehicle, VehicleResource>(vehicle);
             return Ok(result);
@@ -54,22 +46,14 @@ namespace vega.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var model = await context.Models.FindAsync(vehicleResource.ModelId);
-
-            if (model == null)
-            {
-                ModelState.AddModelError("ModelId", "Invalid modelId.");
-                return BadRequest(ModelState);
-            }
-
-            var vehicle = await vehicleRepository.GetVehicle(id);
+            var vehicle = await repository.GetVehicle(id);
 
             if (vehicle == null)
                 return NotFound();
 
             mapper.Map<SaveVehicleResource, Vehicle>(vehicleResource, vehicle);
             vehicle.LastUpdate = DateTime.Now;
-            await context.SaveChangesAsync();
+            await uow.CompleteAsync();
 
             var result = mapper.Map<Vehicle, SaveVehicleResource>(vehicle);
             return Ok(result);
@@ -78,18 +62,18 @@ namespace vega.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteVehicle(int id)
         {
-            var vehicle = await context.Vehicles.FindAsync(id);
+            var vehicle = await repository.GetVehicle(id, includeRelated: false);
             if (vehicle == null)
                 return NotFound();
-            context.Vehicles.Remove(vehicle);
-            await context.SaveChangesAsync();
+            repository.Remove(vehicle);
+            await uow.CompleteAsync();
             return Ok(id);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetVehicle(int id)
         {
-            var vehicle = await vehicleRepository.GetVehicle(id);
+            var vehicle = await repository.GetVehicle(id);
 
             if (vehicle == null)
                 return NotFound();
