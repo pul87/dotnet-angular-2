@@ -22,7 +22,7 @@ namespace vega.Mapping
             .ForMember( vr => vr.Contact, opt => opt.MapFrom( v => new ContactResource { Name = v.ContactName, Email = v.ContactEmail, Phone = v.ContactPhone} ))
             .ForMember( vr => vr.Features, opt => opt.MapFrom( v => v.Features.Select(vf => new KeyValuePairResource{ Id = vf.Feature.Id, Name = vf.Feature.Name} )))
             .ForMember( vr => vr.Make, opt => opt.MapFrom( v => v.Model.Make ));
-            
+
             // API Resource to Domain
             CreateMap<SaveVehicleResource, Vehicle>()
             .ForMember(v => v.Id, opt => opt.Ignore())
@@ -44,7 +44,7 @@ namespace vega.Mapping
                      v.Features.Add(f);
             });
 
-            CreateMap<FilterResource, Filter>();
+            CreateMap<VehicleQueryResource, VehicleQuery>();
         }
     }
 }
