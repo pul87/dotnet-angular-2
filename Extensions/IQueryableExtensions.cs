@@ -12,7 +12,7 @@ namespace vega.Extensions
         // è un estensione. Tutti gli IQueryable adesso hanno questo metodo, es. query.ApplyOrdering(queryObj, columnsMap)
         public static IQueryable<T> ApplyOrdering<T>(this IQueryable<T> query, IQueryObject queryObj, Dictionary<string, Expression<Func<T, object>>> columnsMap) 
         {
-            if (String.IsNullOrWhiteSpace(queryObj.SortBy) || columnsMap.ContainsKey(queryObj.SortBy))
+            if (String.IsNullOrWhiteSpace(queryObj.SortBy) || !columnsMap.ContainsKey(queryObj.SortBy))
                 return query;
 
             if (queryObj.IsSortAscending)
@@ -21,6 +21,16 @@ namespace vega.Extensions
                 query = query.OrderByDescending(columnsMap[queryObj.SortBy]);
 
             return query;
+        }
+
+        public static IQueryable<T> ApplyPaging<T>(this IQueryable<T> query, IQueryObject queryObj) 
+        {
+            if (queryObj.PageSize <= 0)
+                queryObj.PageSize = 10;
+            if (queryObj.Page <= 0)
+                queryObj.Page = 1;
+                 
+            return query.Skip((queryObj.Page -1) * queryObj.PageSize).Take(queryObj.PageSize);
         }
     }
 }
