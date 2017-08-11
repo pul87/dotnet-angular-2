@@ -13,6 +13,7 @@ import { NavMenuComponent } from './components/navmenu/navmenu.component';
 import { HomeComponent } from './components/home/home.component';
 import { FetchDataComponent } from './components/fetchdata/fetchdata.component';
 import { CounterComponent } from './components/counter/counter.component';
+import { PaginationComponent } from './components/shared/pagination-component/pagination.component';
 
 Raven
   .config('https://b7a31838e56b497fb10075045f0a3b3e@sentry.io/200090')
@@ -27,7 +28,8 @@ export const sharedConfig: NgModule = {
         FetchDataComponent,
         HomeComponent,
         VehicleFormComponent,
-        VehicleListComponent
+        VehicleListComponent,
+        PaginationComponent
     ],
     imports: [
         FormsModule,
