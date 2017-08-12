@@ -14,6 +14,7 @@ import { HomeComponent } from './components/home/home.component';
 import { FetchDataComponent } from './components/fetchdata/fetchdata.component';
 import { CounterComponent } from './components/counter/counter.component';
 import { PaginationComponent } from './components/shared/pagination-component/pagination.component';
+import { ViewVehicleComponent } from "./components/view-vehicle/view-vehicle";
 
 Raven
   .config('https://b7a31838e56b497fb10075045f0a3b3e@sentry.io/200090')
@@ -29,6 +30,7 @@ export const sharedConfig: NgModule = {
         HomeComponent,
         VehicleFormComponent,
         VehicleListComponent,
+        ViewVehicleComponent,
         PaginationComponent
     ],
     imports: [
@@ -41,7 +43,8 @@ export const sharedConfig: NgModule = {
             { path: 'fetch-data', component: FetchDataComponent },
             { path: 'vehicles', component: VehicleListComponent },
             { path: 'vehicles/new', component: VehicleFormComponent },
-            { path: 'vehicles/:id', component: VehicleFormComponent },
+            { path: 'vehicles/edit/:id', component: VehicleFormComponent },
+            { path: 'vehicles/:id', component: ViewVehicleComponent },
             { path: '**', redirectTo: 'home' }
         ])
     ],
