@@ -8,7 +8,7 @@ using vega.Persistence;
 namespace Vega.Migrations
 {
     [DbContext(typeof(VegaDbContext))]
-    [Migration("20170812090857_AddPhoto")]
+    [Migration("20170812100038_AddPhoto")]
     partial class AddPhoto
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -134,7 +134,7 @@ namespace Vega.Migrations
             modelBuilder.Entity("vega.Core.Models.Photo", b =>
                 {
                     b.HasOne("vega.Core.Models.Vehicle")
-                        .WithMany("photos")
+                        .WithMany("Photos")
                         .HasForeignKey("VehicleId");
                 });
 

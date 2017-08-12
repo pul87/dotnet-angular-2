@@ -133,7 +133,7 @@ namespace Vega.Migrations
             modelBuilder.Entity("vega.Core.Models.Photo", b =>
                 {
                     b.HasOne("vega.Core.Models.Vehicle")
-                        .WithMany("photos")
+                        .WithMany("Photos")
                         .HasForeignKey("VehicleId");
                 });
 

@@ -12,7 +12,7 @@ namespace vega.Core.Models
         public Vehicle()
         {
             Features = new Collection<VehicleFeature>();
-            photos = new Collection<Photo>();
+            Photos = new Collection<Photo>();
         }
         public int Id { get; set; }
         [Required]
@@ -29,6 +29,6 @@ namespace vega.Core.Models
         public bool IsRegistered { get; set; }
         public DateTime LastUpdate { get; set; }
         public ICollection<VehicleFeature> Features { get; set; }
-        public ICollection<Photo> photos { get; set; }
+        public ICollection<Photo> Photos { get; set; }
     }
 }
