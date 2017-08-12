@@ -12,6 +12,7 @@ using vega.Core;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 using vega.Persistence;
+using vega.Core.Models;
 
 namespace WebApplicationBasic
 {
@@ -35,6 +36,7 @@ namespace WebApplicationBasic
         public void ConfigureServices(IServiceCollection services)
         {
 
+            services.Configure<PhotoSettings>(Configuration.GetSection("PhotoSettings"));
             // Dependency injection per VehicleRepository
             // 3 tipi di DI:
             // Transient ( istanza nuova ad ogni uso )
