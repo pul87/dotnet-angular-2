@@ -1,3 +1,5 @@
+import { BrowserXhr } from '@angular/http';
+import { BrowserXhrWithProgress, ProgressService } from './services/progress.service';
 import { PhotoService } from './services/photo.service';
 import { VehicleListComponent } from './components/vehicle-list/vehicle-list';
 import * as Raven from 'raven-js';
@@ -51,7 +53,9 @@ export const sharedConfig: NgModule = {
     ],
     providers: [
         { provide: ErrorHandler, useClass: AppErrorHandler },
+        { provide: BrowserXhr, useClass: BrowserXhrWithProgress },
         VehicleService,
-        PhotoService
+        PhotoService,
+        ProgressService
     ]
 };
