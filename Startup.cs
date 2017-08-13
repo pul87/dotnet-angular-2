@@ -44,6 +44,7 @@ namespace WebApplicationBasic
             // Scoped ( instanza nuova per ogni request )
             // di seguito lego l'interfaccia all'implementazione
             services.AddScoped<IVehicleRepository, VehicleRepository>();
+            services.AddScoped<IPhotoRepository, PhotoRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             services.AddAutoMapper();

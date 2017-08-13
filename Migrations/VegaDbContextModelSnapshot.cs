@@ -71,7 +71,7 @@ namespace Vega.Migrations
                         .IsRequired()
                         .HasMaxLength(255);
 
-                    b.Property<int?>("VehicleId");
+                    b.Property<int>("VehicleId");
 
                     b.HasKey("Id");
 
@@ -134,7 +134,8 @@ namespace Vega.Migrations
                 {
                     b.HasOne("vega.Core.Models.Vehicle")
                         .WithMany("Photos")
-                        .HasForeignKey("VehicleId");
+                        .HasForeignKey("VehicleId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("vega.Core.Models.Vehicle", b =>
