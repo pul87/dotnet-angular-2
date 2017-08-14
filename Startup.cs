@@ -79,6 +79,14 @@ namespace WebApplicationBasic
             // Serve per servire file statici
             app.UseStaticFiles();
 
+            // Setupe Auth0
+            var options = new JwtBearerOptions
+            {
+                Audience = "https://api.vega.com",
+                Authority = "https://pul87.eu.auth0.com/"
+            };
+            app.UseJwtBearerAuthentication(options);
+
             // Anche MVC è un middleware, quando arriva una richiesta
             // in base alla rotta vengono richiamati i controller.
             app.UseMvc(routes =>
