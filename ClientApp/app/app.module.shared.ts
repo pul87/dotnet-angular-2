@@ -1,3 +1,4 @@
+import { AuthService } from './services/auth.service';
 import { BrowserXhr } from '@angular/http';
 import { BrowserXhrWithProgress, ProgressService } from './services/progress.service';
 import { PhotoService } from './services/photo.service';
@@ -54,6 +55,7 @@ export const sharedConfig: NgModule = {
     providers: [
         { provide: ErrorHandler, useClass: AppErrorHandler },
         { provide: BrowserXhr, useClass: BrowserXhrWithProgress },
+        AuthService,
         VehicleService,
         PhotoService,
         ProgressService
