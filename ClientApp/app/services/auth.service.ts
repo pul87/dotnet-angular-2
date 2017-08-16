@@ -6,6 +6,8 @@ import * as auth0 from 'auth0-js';
 @Injectable()
 export class AuthService {
 
+  private roles: string[] = [];
+
   auth0 = new auth0.WebAuth({
     clientID: 'OJ0OBlYKJ1uqBVYi8KnzPbc7ZLkm7bXw',
     domain: 'pul87.eu.auth0.com',
@@ -22,13 +24,15 @@ export class AuthService {
   }
 
  public handleAuthentication(): void {
+    var me = this;
     this.auth0.parseHash((err, authResult) => {
       if (authResult && authResult.accessToken && authResult.idToken) {
         window.location.hash = '';
         this.setSession(authResult);
         this.router.navigate(['/home']);
-        this.auth0.client.userInfo(authResult.accessToken, function(err, user) {
-            console.log(user);
+        this.auth0.client.userInfo(authResult.accessToken, (err, user) => {
+          
+          this.setUserRoles(user);
         });
       } else if (err) {
         this.router.navigate(['/home']);
@@ -46,11 +50,19 @@ export class AuthService {
     localStorage.setItem('expires_at', expiresAt);
   }
 
+  private setUserRoles(user): void {
+    console.log(user);
+    localStorage.setItem('roles', user.roles);
+    this.roles = user.roles;
+  }
+
   public logout(): void {
     // Remove tokens and expiry time from localStorage
     localStorage.removeItem('access_token');
     localStorage.removeItem('id_token');
     localStorage.removeItem('expires_at');
+    localStorage.removeItem('roles');
+    this.roles = [];
     // Go back to the home route
     this.router.navigate(['/']);
   }
@@ -60,5 +72,9 @@ export class AuthService {
     // access token's expiry time
     const expiresAt = JSON.parse(localStorage.getItem('expires_at'));
     return new Date().getTime() < expiresAt;
+  }
+
+  public isInRole(roleName) {
+    return this.roles.indexOf(roleName) > -1;
   }
 }

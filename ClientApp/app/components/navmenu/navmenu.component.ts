@@ -26,6 +26,10 @@ export class NavMenuComponent {
     isAuthenticated() {
         return this.authService.isAuthenticated();
     }
+
+    isInRole(roleName) {
+        return this.authService.isInRole(roleName);
+    }
 }
 
 

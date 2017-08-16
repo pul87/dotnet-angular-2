@@ -1,3 +1,6 @@
+import { AdminAuthGuard } from './services/admin-auth-guard.service';
+import { AuthGuard } from './services/auth-guard.service';
+import { AdminComponent } from './components/admin/admin.component';
 import { AuthService } from './services/auth.service';
 import { BrowserXhr } from '@angular/http';
 import { BrowserXhrWithProgress, ProgressService } from './services/progress.service';
@@ -19,6 +22,7 @@ import { FetchDataComponent } from './components/fetchdata/fetchdata.component';
 import { CounterComponent } from './components/counter/counter.component';
 import { PaginationComponent } from './components/shared/pagination-component/pagination.component';
 import { ViewVehicleComponent } from "./components/view-vehicle/view-vehicle";
+import { AUTH_PROVIDERS } from "angular2-jwt/angular2-jwt";
 
 Raven
   .config('https://b7a31838e56b497fb10075045f0a3b3e@sentry.io/200090')
@@ -32,6 +36,7 @@ export const sharedConfig: NgModule = {
         CounterComponent,
         FetchDataComponent,
         HomeComponent,
+        AdminComponent,
         VehicleFormComponent,
         VehicleListComponent,
         ViewVehicleComponent,
@@ -43,7 +48,7 @@ export const sharedConfig: NgModule = {
         RouterModule.forRoot([
             { path: '', redirectTo: 'vehicles', pathMatch: 'full' },
             { path: 'home', component: HomeComponent },
-            { path: 'counter', component: CounterComponent },
+            { path: 'admin', component: AdminComponent, canActivate: [ AdminAuthGuard ] },
             { path: 'fetch-data', component: FetchDataComponent },
             { path: 'vehicles', component: VehicleListComponent },
             { path: 'vehicles/new', component: VehicleFormComponent },
@@ -56,8 +61,11 @@ export const sharedConfig: NgModule = {
         { provide: ErrorHandler, useClass: AppErrorHandler },
         { provide: BrowserXhr, useClass: BrowserXhrWithProgress },
         AuthService,
+        AUTH_PROVIDERS,
         VehicleService,
         PhotoService,
-        ProgressService
+        ProgressService,
+        AuthGuard,
+        AdminAuthGuard
     ]
 };
