@@ -24,7 +24,6 @@ export class NavMenuComponent {
     }
 
     isAuthenticated() {
-        console.log("Autenticato? ", this.authService.isAuthenticated());
         return this.authService.isAuthenticated();
     }
 }

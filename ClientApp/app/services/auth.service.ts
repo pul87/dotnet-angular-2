@@ -11,7 +11,7 @@ export class AuthService {
     domain: 'pul87.eu.auth0.com',
     responseType: 'token id_token',
     audience: 'https://pul87.eu.auth0.com/userinfo',
-    redirectUri: 'http://localhost:5000/boh',      
+    redirectUri: 'http://localhost:5000',      
     scope: 'openid'
   });
 
@@ -27,11 +27,15 @@ export class AuthService {
         window.location.hash = '';
         this.setSession(authResult);
         this.router.navigate(['/home']);
+        this.auth0.client.userInfo(authResult.accessToken, function(err, user) {
+            console.log(user);
+        });
       } else if (err) {
         this.router.navigate(['/home']);
         console.log(err);
       }
     });
+
   }
 
   private setSession(authResult): void {
