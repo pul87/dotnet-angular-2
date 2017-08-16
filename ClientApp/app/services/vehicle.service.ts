@@ -1,11 +1,13 @@
 import { SaveVehicle } from './../components/app/models/vehicle';
 import { Http } from '@angular/http';
 import { Injectable, Inject } from '@angular/core';
+import { AuthHttp } from "angular2-jwt/angular2-jwt";
 import 'rxjs/add/operator/map';
 
 @Injectable()
 export class VehicleService {
-    constructor(private http: Http, @Inject('ORIGIN_URL') private originUrl: string) {}
+    // AuthHttp è un wrapper dell'http di Angular, ma controlla nel localStorage se esiste un item con chiave token e se esiste lo aggiunge alla request
+    constructor(private http: Http, @Inject('ORIGIN_URL') private originUrl: string, private authHttp : AuthHttp) {}
 
     getMakes() {
         return this.http.get(`${this.originUrl}/api/makes`)
@@ -18,17 +20,17 @@ export class VehicleService {
     }
 
     create(vehicle) {
-        return this.http.post(`${this.originUrl}/api/vehicles`, vehicle)
+        return this.authHttp.post(`${this.originUrl}/api/vehicles`, vehicle)
         .map( res => res.json());
     }
 
     update(vehicle: SaveVehicle) {
-        return this.http.put(`${this.originUrl}/api/vehicles/${vehicle.id}`, vehicle)
+        return this.authHttp.put(`${this.originUrl}/api/vehicles/${vehicle.id}`, vehicle)
         .map( res => res.json());
     }
 
     delete(id: number) {
-        return this.http.delete(`${this.originUrl}/api/vehicles/${id}`)
+        return this.authHttp.delete(`${this.originUrl}/api/vehicles/${id}`)
         .map( res => res.json());
     }
 
