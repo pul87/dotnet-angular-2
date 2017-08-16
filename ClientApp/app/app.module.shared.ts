@@ -59,12 +59,10 @@ export const sharedConfig: NgModule = {
     ],
     providers: [
         { provide: ErrorHandler, useClass: AppErrorHandler },
-        { provide: BrowserXhr, useClass: BrowserXhrWithProgress },
         AuthService,
         AUTH_PROVIDERS,
         VehicleService,
         PhotoService,
-        ProgressService,
         AuthGuard,
         AdminAuthGuard
     ]
