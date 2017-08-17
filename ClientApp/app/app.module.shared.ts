@@ -4,6 +4,7 @@ import { AdminComponent } from './components/admin/admin.component';
 import { AuthService } from './services/auth.service';
 import { BrowserXhr } from '@angular/http';
 import { BrowserXhrWithProgress, ProgressService } from './services/progress.service';
+import { ChartModule } from 'angular2-chartjs';
 import { PhotoService } from './services/photo.service';
 import { VehicleListComponent } from './components/vehicle-list/vehicle-list';
 import * as Raven from 'raven-js';
@@ -23,11 +24,11 @@ import { CounterComponent } from './components/counter/counter.component';
 import { PaginationComponent } from './components/shared/pagination-component/pagination.component';
 import { ViewVehicleComponent } from "./components/view-vehicle/view-vehicle";
 import { AUTH_PROVIDERS } from "angular2-jwt/angular2-jwt";
-
+/*
 Raven
   .config('https://b7a31838e56b497fb10075045f0a3b3e@sentry.io/200090')
   .install();
-
+*/
 export const sharedConfig: NgModule = {
     bootstrap: [ AppComponent ],
     declarations: [
@@ -45,14 +46,15 @@ export const sharedConfig: NgModule = {
     imports: [
         FormsModule,
         ToastyModule.forRoot(),
+        ChartModule,
         RouterModule.forRoot([
             { path: '', redirectTo: 'vehicles', pathMatch: 'full' },
             { path: 'home', component: HomeComponent },
             { path: 'admin', component: AdminComponent, canActivate: [ AdminAuthGuard ] },
             { path: 'fetch-data', component: FetchDataComponent },
             { path: 'vehicles', component: VehicleListComponent },
-            { path: 'vehicles/new', component: VehicleFormComponent },
-            { path: 'vehicles/edit/:id', component: VehicleFormComponent },
+            { path: 'vehicles/new', component: VehicleFormComponent, canActivate: [ AuthGuard ] },
+            { path: 'vehicles/edit/:id', component: VehicleFormComponent, canActivate: [ AuthGuard ] },
             { path: 'vehicles/:id', component: ViewVehicleComponent },
             { path: '**', redirectTo: 'home' }
         ])
