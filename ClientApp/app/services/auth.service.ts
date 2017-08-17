@@ -11,10 +11,10 @@ export class AuthService {
   auth0 = new auth0.WebAuth({
     clientID: 'OJ0OBlYKJ1uqBVYi8KnzPbc7ZLkm7bXw',
     domain: 'pul87.eu.auth0.com',
-    responseType: 'token id_token',
+    responseType: 'token',
     audience: 'https://pul87.eu.auth0.com/userinfo',
     redirectUri: 'http://localhost:5000',      
-    scope: 'openid'
+    scope: 'openid token'
   });
 
   constructor(public router: Router) {}
@@ -26,12 +26,14 @@ export class AuthService {
  public handleAuthentication(): void {
     var me = this;
     this.auth0.parseHash((err, authResult) => {
+      debugger
       if (authResult && authResult.accessToken && authResult.idToken) {
         window.location.hash = '';
         this.setSession(authResult);
         this.router.navigate(['/home']);
+        debugger
         this.auth0.client.userInfo(authResult.accessToken, (err, user) => {
-          
+          debugger
           this.setUserRoles(user);
         });
       } else if (err) {
